@@ -10,11 +10,12 @@ public class TR {
     private char operator;
     private double result;
     private boolean errorflag;
+    public double digits = (double) 6; // Numbers to display after comma
 
     public TR() {
-        operand1 = 0;
-        operand2 = 0;
-        result = 0;
+        operand1 = 0.0;
+        operand2 = 0.0;
+        result = 0.0;
         operator = ' ';
         errorflag = false;
     }
@@ -54,6 +55,11 @@ public class TR {
         }
     }
 
+    private void round() {
+
+        this.result = Math.round(((this.digits*10.0) * this.result)) / (this.digits*10.0);
+    }
+
     // Public Function to call the calculators functions.
     // (Result Depending on the operator data.)
     public void calc() {
@@ -62,16 +68,22 @@ public class TR {
             case '+' :
                 Log.d("calc - Operator","+");
                 plus();
+                round();
+                Log.d("calc + Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
             case '-' :
                 Log.d("calc - Operator","-");
                 minus();
+                round();
+                Log.d("calc - Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
             case 'x' :
                 Log.d("calc - Operator","x");
                 mal();
+                round();
+                Log.d("calc x Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
             case '%' :
@@ -81,6 +93,8 @@ public class TR {
                 }
                 Log.d("calc - Operator","%");
                 div();
+                round();
+                Log.d("calc % Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
             default:
@@ -89,13 +103,14 @@ public class TR {
     }
 
     public double getResult() {
+        //Log.d("calc - getResult","result: ".concat(String.valueOf(this.result)));
         return this.result;
     }
 
     public void clear() {
-        this.setOperand1(0);
-        this.setOperand2(0);
-        this.result = 0;
+        this.setOperand1(0.0);
+        this.setOperand2(0.0);
+        this.result = 0.0;
         this.setOperator(' ');
         errorflag = false;
     }

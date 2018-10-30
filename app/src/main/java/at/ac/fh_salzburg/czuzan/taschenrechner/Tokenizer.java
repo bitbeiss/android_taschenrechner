@@ -1,8 +1,6 @@
 package at.ac.fh_salzburg.czuzan.taschenrechner;
 import android.util.Log;
 
-import android.view.Display;
-
 import static java.lang.Float.parseFloat;
 
 public class Tokenizer {
@@ -16,12 +14,16 @@ public class Tokenizer {
     private int state;     //state of the tokenizer (1 to 3; 3 --> complete)
     private double tok1;    //token 1
     private double tok2;    //token 2
+    private String tokstr1;
+    private String tokstr2;
     private String ctok;   //currently token
     private char op;       //operator
 
     Tokenizer() {
         this.tok1 = 0;
         this.tok2 = 0;
+        this.tokstr1 = "";
+        this.tokstr2 = "";
         this.op = ' ';
         this.state = 0;    //state: 0 (no token1 & 2, no op), 1 (token1), 2 (token1,op), 3 (token1,op,token2)
         this.ctok = "";
@@ -30,6 +32,8 @@ public class Tokenizer {
     public void reset() {
         this.setToken1(0);
         this.setToken2(0);
+        this.tokstr1 = "";
+        this.tokstr2 = "";
         this.setOperator(' ');
         this.setState(0);
         this.setCurrentToken("");
@@ -38,6 +42,7 @@ public class Tokenizer {
 
     public void trcontinue(){
         this.setToken2(0);
+        this.tokstr2 = "";
         this.setOperator(' ');
         this.setState(1);
         this.setCurrentToken("");
@@ -123,23 +128,29 @@ public class Tokenizer {
     public void mytokenize() {
         Log.d("Exe","mytokenize");
         // See if the current token evaluates to a float type
-        if (tryParseFloat(this.ctok)) {
+        // "token" is read and evaluated from display!
+
+        if (tryParseFloat(this.tokstr1.concat(this.ctok))) {
 
             // we don't have an operator yet
-            if(this.state == 0){
-                this.setToken1(parseFloat(this.ctok));
-                Log.d("Set","Token1 was set.");
+            if(this.state == 0 || this.state == 1) {
+                this.setToken1(Double.valueOf(this.ctok));
+                Log.d("Set", "Token1 was set to: ".concat(ctok));
                 this.setState(1);
                 Log.d("State", String.valueOf(getState()));
-            }
+                this.ctok ="";
+                }
 
-            // we already have an Operator
-            if(this.state == 2) {
-                this.setToken2(parseFloat(this.ctok));
-                Log.d("Set","Token2 was set.");
+
+                // we already have an Operator
+            if(this.state == 2 || this.state == 3) {
+                this.setToken2(Double.valueOf(this.ctok));
+                Log.d("Set", "Token2 was set to ".concat(ctok));
                 this.setState(3);
                 Log.d("State", String.valueOf(getState()));
-            }
+                this.ctok ="";
+                }
+
         }
 
         // See if the current token evaluates to a char type
@@ -152,6 +163,7 @@ public class Tokenizer {
                 Log.d("Operator set",String.valueOf(tmp));
                 this.setState(2);
                 Log.d("State", String.valueOf(getState()));
+                this.ctok ="";
             }
         }
     }

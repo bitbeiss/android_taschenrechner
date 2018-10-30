@@ -110,7 +110,35 @@ public class calc extends AppCompatActivity {
                             myTR.setOperand2(myTokenizer.getToken2());
                             myTR.setOperator(myTokenizer.getOperator());
                             myTR.calc();
-                            display.setText(String.valueOf(myTR.getResult()));
+
+                            if ((int) myTR.digits == 0) {
+                                display.setText(String.format("%.0f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 1) {
+                                display.setText(String.format("%.1f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 2) {
+                                display.setText(String.format("%.2f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 3) {
+                                display.setText(String.format("%.3f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 4) {
+                                display.setText(String.format("%.4f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 5) {
+                                display.setText(String.format("%.5f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 6) {
+                                display.setText(String.format("%.6f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 7) {
+                                display.setText(String.format("%.7f", myTR.getResult()));
+                            }
+                            else if ((int) myTR.digits == 8) {
+                                display.setText(String.format("%.8f", myTR.getResult()));
+                            }
+                            else display.setText(String.format("%.8f", myTR.getResult()));
                             myTR.setOperand1(myTR.getResult()); // Continue using result as operand1
                             myTokenizer.trcontinue(); // Continue instead of reset using result as operand1
                             myTokenizer.setToken1(myTR.getResult());
