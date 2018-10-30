@@ -14,8 +14,8 @@ public class Tokenizer {
 
     private String token;
     private int state;     //state of the tokenizer (1 to 3; 3 --> complete)
-    private float tok1;    //token 1
-    private float tok2;    //token 2
+    private double tok1;    //token 1
+    private double tok2;    //token 2
     private String ctok;   //currently token
     private char op;       //operator
 
@@ -23,7 +23,7 @@ public class Tokenizer {
         this.tok1 = 0;
         this.tok2 = 0;
         this.op = ' ';
-        this.state = 1;
+        this.state = 0;    //state: 0 (no token1 & 2, no op), 1 (token1), 2 (token1,op), 3 (token1,op,token2)
         this.ctok = "";
     }
 
@@ -31,9 +31,17 @@ public class Tokenizer {
         this.setToken1(0);
         this.setToken2(0);
         this.setOperator(' ');
-        this.setState(1);
+        this.setState(0);
         this.setCurrentToken("");
         Log.d("Reset","Tokenizer was reset.");
+    }
+
+    public void trcontinue(){
+        this.setToken2(0);
+        this.setOperator(' ');
+        this.setState(1);
+        this.setCurrentToken("");
+        Log.d("Reset","Tokenizer was set to continue.");
     }
 
     public void setCurrentToken(String current_token) {
@@ -48,19 +56,19 @@ public class Tokenizer {
         this.state = stat;
     }
 
-    public float getToken1() {
+    public double getToken1() {
         return this.tok1;
     }
 
-    public float getToken2() {
+    public double getToken2() {
         return this.tok2;
     }
 
-    private void setToken1(float tok) {
+    public void setToken1(double tok) {
         this.tok1 = tok;
     }
 
-    private void setToken2(float tok) {
+    private void setToken2(double tok) {
         this.tok2 = tok;
     }
 
@@ -118,9 +126,11 @@ public class Tokenizer {
         if (tryParseFloat(this.ctok)) {
 
             // we don't have an operator yet
-            if(this.state == 1){
+            if(this.state == 0){
                 this.setToken1(parseFloat(this.ctok));
                 Log.d("Set","Token1 was set.");
+                this.setState(1);
+                Log.d("State", String.valueOf(getState()));
             }
 
             // we already have an Operator
@@ -136,7 +146,7 @@ public class Tokenizer {
         if (tryParseChar(this.ctok)) {
             char tmp = ctok.charAt(0);
             // ...AND is an operator
-            if ((tmp == '%') || (tmp == 'x') || (tmp == '+') || (tmp == '-')) {
+            if (((tmp == '%') || (tmp == 'x') || (tmp == '+') || (tmp == '-')) && (this.getState() == 1)) {
                 // Operator is valid: switch from entry of token 1 to token 2
                 this.setOperator(tmp);
                 Log.d("Operator set",String.valueOf(tmp));

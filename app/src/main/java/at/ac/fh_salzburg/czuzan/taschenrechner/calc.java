@@ -6,14 +6,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import static android.view.View.*;
-import static java.lang.Float.parseFloat;
-import android.util.Log;
 
 
 public class calc extends AppCompatActivity {
@@ -81,7 +78,7 @@ public class calc extends AppCompatActivity {
 
                     if(ch.equals("+") ) {
                         display.setText("+");
-                        myTokenizer.setCurrentToken("-");
+                        myTokenizer.setCurrentToken("+");
                         myTokenizer.mytokenize();
                         display.setText("");
                     }
@@ -109,13 +106,15 @@ public class calc extends AppCompatActivity {
 
                     if(ch.equals("=") ) {
                         if (myTokenizer.getState() == 3) {
-                            myTR.setToken1(myTokenizer.getToken1());
-                            myTR.setToken2(myTokenizer.getToken2());
+                            myTR.setOperand1(myTokenizer.getToken1());
+                            myTR.setOperand2(myTokenizer.getToken2());
                             myTR.setOperator(myTokenizer.getOperator());
                             myTR.calc();
                             display.setText(String.valueOf(myTR.getResult()));
-
-                            myTokenizer.reset(); // reset Tokenizer state
+                            myTR.setOperand1(myTR.getResult()); // Continue using result as operand1
+                            myTokenizer.trcontinue(); // Continue instead of reset using result as operand1
+                            myTokenizer.setToken1(myTR.getResult());
+                            //myTokenizer.reset();  // reset Tokenizer state
                         }
                     }
 
@@ -144,11 +143,14 @@ public class calc extends AppCompatActivity {
                     // current character/number entered on keyboard.
                     if (display.getText().toString().equals("0")) {
                         display.setText(ch);
+                        myTokenizer.setCurrentToken(display.getText().toString());
+                        myTokenizer.mytokenize();
+
                     }
                     // case: comma encountered; append comma and continue appending numbers
                     // tokenizer to be done only with additional digit entered (omitted here)
-                    else if (ch.equals(".")) {
-                        display.setText(current_display_text.concat(ch));
+                    else if (ch.equals(".") || ch.equals(",")) {
+                        display.setText(current_display_text.concat("."));
                     }
                     // case: continue to append numbers entered on keyboard
                     // (try to) tokenize thereafter
