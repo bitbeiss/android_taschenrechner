@@ -11,9 +11,28 @@ import java.util.Iterator;
 import java.util.List;
 
 import static android.view.View.*;
+import static java.lang.Double.parseDouble;
+import static java.lang.Float.parseFloat;
 
 
 public class calc extends AppCompatActivity {
+
+    final Tokenizer myTokenizer = new Tokenizer();
+    final TR myTR = new TR();
+    private TextView display;
+
+
+    public void myTR_calc()
+    {
+        myTR.calc();
+    }
+
+    public void resetAll()
+    {
+        myTokenizer.reset();
+        myTR.clear();
+        display.setText("0");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +55,28 @@ public class calc extends AppCompatActivity {
         View btn_mal = findViewById(R.id.btn_mal);
         View btn_division = findViewById(R.id.btn_division);
         View btn_corr = findViewById(R.id.btn_corr);
-        View btn_equal = findViewById(R.id.btn_equal);
+        final View btn_equal = findViewById(R.id.btn_equal);
         View btn_comma = findViewById(R.id.btn_comma);
         View btn_sign = findViewById(R.id.btn_sign);
+        View btn_recall = findViewById(R.id.btn_recall);
+        View btn_store = findViewById(R.id.btn_store);
+        View btn_squareRoot = findViewById(R.id.btn_squareRoot);
 
         List<View> digit_btn_list = Arrays.asList(      btn0, btn1, btn2, btn3,
                                                         btn4, btn5, btn6, btn7, btn8, btn9,
                                                         btn_comma);
         List<View> op_ctrl_btn_list = Arrays.asList(    btn_plus, btn_minus, btn_mal,
                                                         btn_equal, btn_corr, btn_division,
-                                                        btn_sign);
+                                                        btn_sign, btn_recall, btn_store, btn_squareRoot);
 
-        final Tokenizer myTokenizer = new Tokenizer();
-        final TR myTR = new TR();
+
+
+        display = findViewById(R.id.display);
 
         final Iterator<View> d_iterator = digit_btn_list.iterator();
         final Iterator<View> oc_iterator = op_ctrl_btn_list.iterator();
+
+
 
         // Install the onClick Listerners for control- and operator buttons.
         // Keyboard logic for other than digits
@@ -60,10 +85,21 @@ public class calc extends AppCompatActivity {
             tmp.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(android.view.View v) {
-                    TextView display = findViewById(R.id.display);
+
+                    if(myTR.isErrorflag())
+                        resetAll();
+
+
                     Button btn = (Button) v;
                     String ch = btn.getText().toString();
                     String current_display_text = display.getText().toString();
+
+                    if((ch.contentEquals("+")
+                            || ch.contentEquals("-")
+                            || ch.contentEquals("x")
+                            || ch.contentEquals("%"))
+                            && (myTokenizer.getState() == 3))
+                        btn_equal.performClick();
 
                     if(ch.equals("+/-")) {
                         if (display.getText().toString().substring(0,1).equals("-")) {
@@ -104,6 +140,41 @@ public class calc extends AppCompatActivity {
                         display.setText("");
                     }
 
+                    if(ch.equals("sqrt()") ) {
+
+                        if (myTokenizer.getState() == 2)
+                            return;
+                        else if (myTokenizer.getState() == 1)
+                        {
+                            if((myTokenizer.getToken1() >= 0))
+                            {
+                                myTokenizer.setToken1(Math.sqrt(myTokenizer.getToken1()));
+                                display.setText(String.valueOf(myTokenizer.getToken1()));
+                            }
+                            else
+                            {
+                                myTR.setErrorflag(true);
+                                display.setText("complexe numbers aren't supported");
+                                return;
+                            }
+                        }
+                        else if (myTokenizer.getState() == 3)
+                        {
+                            if((myTokenizer.getToken2() >= 0))
+                            {
+                                myTokenizer.setToken2(Math.sqrt(myTokenizer.getToken2()));
+                                display.setText(String.valueOf(myTokenizer.getToken2()));
+                            }
+                            else
+                            {
+                                myTR.setErrorflag(true);
+                                display.setText("complexe numbers aren't supported");
+                                return;
+                            }
+                        }
+                    }
+
+
                     if(ch.equals("=") ) {
                         if (myTokenizer.getState() == 3) {
                             myTR.setOperand1(myTokenizer.getToken1());
@@ -111,48 +182,42 @@ public class calc extends AppCompatActivity {
                             myTR.setOperator(myTokenizer.getOperator());
                             myTR.calc();
 
-                            if ((int) myTR.digits == 0) {
-                                display.setText(String.format("%.0f", myTR.getResult()));
+                            if(myTR.isErrorflag()) {
+                                display.setText("divide by 0");
+                                myTR.setLastUsedButton(btn.getText().toString());
+                                return;
                             }
-                            else if ((int) myTR.digits == 1) {
-                                display.setText(String.format("%.1f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 2) {
-                                display.setText(String.format("%.2f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 3) {
-                                display.setText(String.format("%.3f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 4) {
-                                display.setText(String.format("%.4f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 5) {
-                                display.setText(String.format("%.5f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 6) {
-                                display.setText(String.format("%.6f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 7) {
-                                display.setText(String.format("%.7f", myTR.getResult()));
-                            }
-                            else if ((int) myTR.digits == 8) {
-                                display.setText(String.format("%.8f", myTR.getResult()));
-                            }
-                            else display.setText(String.format("%.8f", myTR.getResult()));
+
+                            display.setText(String.valueOf(myTR.roundResult()));
+
                             myTR.setOperand1(myTR.getResult()); // Continue using result as operand1
                             myTokenizer.trcontinue(); // Continue instead of reset using result as operand1
                             myTokenizer.setToken1(myTR.getResult());
-                            //myTokenizer.reset();  // reset Tokenizer state
+
                         }
                     }
 
                     // clear/reset the calculator
-                    if (ch.equals("CE/C")) {
-                        myTokenizer.reset();
-                        myTR.clear();
-                        display.setText("0");
+                    if (ch.equals("CE/C"))
+                        resetAll();
+
+                    if(ch.equals("STO")) {
+                        btn_equal.performClick();
+                        if(myTokenizer.tryParseDouble(display.getText().toString()))
+                            myTR.setStoredValue(parseDouble(display.getText().toString()));
+                        return;
                     }
-                }
+
+                    if(ch.equals("RCL")) {
+
+                        display.setText(String.valueOf(myTR.getStoredValue()));
+                        myTokenizer.setCurrentToken(String.valueOf(myTR.getStoredValue()));
+                        myTokenizer.mytokenize();
+                        return;
+                    }
+
+                    myTR.setLastUsedButton(btn.getText().toString());
+                 }
             });
         }
 
@@ -163,7 +228,10 @@ public class calc extends AppCompatActivity {
             tmp.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(android.view.View v) {
-                    TextView display = findViewById(R.id.display);
+
+                    if(myTR.isErrorflag() || myTR.getLastUsedButton().contentEquals("="))
+                        resetAll();
+
                     Button btn = (Button) v;
                     String ch = btn.getText().toString();
                     String current_display_text = display.getText().toString();
@@ -178,7 +246,8 @@ public class calc extends AppCompatActivity {
                     // case: comma encountered; append comma and continue appending numbers
                     // tokenizer to be done only with additional digit entered (omitted here)
                     else if (ch.equals(".") || ch.equals(",")) {
-                        display.setText(current_display_text.concat("."));
+                        if(!display.getText().toString().contains("."))
+                            display.setText(current_display_text.concat("."));
                     }
                     // case: continue to append numbers entered on keyboard
                     // (try to) tokenize thereafter
@@ -187,6 +256,8 @@ public class calc extends AppCompatActivity {
                         myTokenizer.setCurrentToken(display.getText().toString());
                         myTokenizer.mytokenize();
                     }
+
+                    myTR.setLastUsedButton(btn.getText().toString());
                 }
             });
         }

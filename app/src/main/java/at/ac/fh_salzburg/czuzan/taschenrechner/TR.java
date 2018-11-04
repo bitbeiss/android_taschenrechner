@@ -10,7 +10,10 @@ public class TR {
     private char operator;
     private double result;
     private boolean errorflag;
-    public double digits = (double) 6; // Numbers to display after comma
+    public double digits = 16.0; // Numbers to display after comma
+    private String lastUsedButton;
+    private double storedValue;
+
 
     public TR() {
         operand1 = 0.0;
@@ -18,6 +21,8 @@ public class TR {
         result = 0.0;
         operator = ' ';
         errorflag = false;
+        lastUsedButton = "";
+        storedValue = 0.0;
     }
 
     public void setOperand1(double tok1) {
@@ -30,6 +35,30 @@ public class TR {
 
     public void setOperator(char op) {
         this.operator = op;
+    }
+
+    public String getLastUsedButton() {
+        return lastUsedButton;
+    }
+
+    public void setLastUsedButton(String lastButton) {
+        this.lastUsedButton = lastButton;
+    }
+
+    public boolean isErrorflag() {
+        return errorflag;
+    }
+
+    public void setErrorflag(boolean errorflag) {
+        this.errorflag = errorflag;
+    }
+
+    public double getStoredValue() {
+        return storedValue;
+    }
+
+    public void setStoredValue(double storedValue) {
+        this.storedValue = storedValue;
     }
 
     private void plus() {
@@ -55,9 +84,11 @@ public class TR {
         }
     }
 
-    private void round() {
+    public double roundResult() {
 
-        this.result = Math.round(((this.digits*10.0) * this.result)) / (this.digits*10.0);
+        double factor = Math.pow(10.0, digits);
+        return Math.round(this.result * factor) / (factor);
+        //return Math.round(((this.digits*10.0) * this.result)) / (this.digits*10.0);
     }
 
     // Public Function to call the calculators functions.
@@ -68,21 +99,21 @@ public class TR {
             case '+' :
                 Log.d("calc - Operator","+");
                 plus();
-                round();
+                //round();
                 Log.d("calc + Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
             case '-' :
                 Log.d("calc - Operator","-");
                 minus();
-                round();
+                //round();
                 Log.d("calc - Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
             case 'x' :
                 Log.d("calc - Operator","x");
                 mal();
-                round();
+                //round();
                 Log.d("calc x Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
@@ -93,12 +124,14 @@ public class TR {
                 }
                 Log.d("calc - Operator","%");
                 div();
-                round();
+                //round();
                 Log.d("calc % Result","result: ".concat(String.format("%.4f",this.result)));
                 break;
 
+
             default:
                 Log.d("calc - Operator fail","No/no-valid operator! Value: ".concat(String.valueOf(this.operator)));
+                return;
         }
     }
 
@@ -112,6 +145,7 @@ public class TR {
         this.setOperand2(0.0);
         this.result = 0.0;
         this.setOperator(' ');
-        errorflag = false;
+        this.errorflag = false;
+        this.lastUsedButton = "";
     }
 }

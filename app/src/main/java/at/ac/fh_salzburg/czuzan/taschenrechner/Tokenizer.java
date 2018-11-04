@@ -1,6 +1,7 @@
 package at.ac.fh_salzburg.czuzan.taschenrechner;
 import android.util.Log;
 
+import static java.lang.Double.parseDouble;
 import static java.lang.Float.parseFloat;
 
 public class Tokenizer {
@@ -69,11 +70,15 @@ public class Tokenizer {
         return this.tok2;
     }
 
+    public void setTokstr1(String tokstr1) {
+        this.tokstr1 = tokstr1;
+    }
+
     public void setToken1(double tok) {
         this.tok1 = tok;
     }
 
-    private void setToken2(double tok) {
+    public void setToken2(double tok) {
         this.tok2 = tok;
     }
 
@@ -109,6 +114,25 @@ public class Tokenizer {
         }
     }
 
+    // Custom method mimicing C# tryParse behaviour
+    public boolean tryParseDouble(String value) {
+
+        if(isNullOrEmpty(value)) {
+            Log.d("Fail - isNullOrEmpty","tryParseDouble");
+            return false;
+        }
+
+        try {
+            parseDouble(value);
+            Log.d("Success","tryParseDouble was true");
+            return true;
+        }
+        catch (NumberFormatException e) {
+            Log.d("Fail - catch","tryParseDouble");
+            return false;
+        }
+    }
+
 
     public boolean tryParseChar(String value) {
 
@@ -127,10 +151,10 @@ public class Tokenizer {
 
     public void mytokenize() {
         Log.d("Exe","mytokenize");
-        // See if the current token evaluates to a float type
+        // See if the current token evaluates to a Double type
         // "token" is read and evaluated from display!
 
-        if (tryParseFloat(this.tokstr1.concat(this.ctok))) {
+        if (tryParseDouble(this.tokstr1.concat(this.ctok))) {
 
             // we don't have an operator yet
             if(this.state == 0 || this.state == 1) {
@@ -156,14 +180,17 @@ public class Tokenizer {
         // See if the current token evaluates to a char type
         if (tryParseChar(this.ctok)) {
             char tmp = ctok.charAt(0);
-            // ...AND is an operator
-            if (((tmp == '%') || (tmp == 'x') || (tmp == '+') || (tmp == '-')) && (this.getState() == 1)) {
-                // Operator is valid: switch from entry of token 1 to token 2
-                this.setOperator(tmp);
-                Log.d("Operator set",String.valueOf(tmp));
-                this.setState(2);
-                Log.d("State", String.valueOf(getState()));
-                this.ctok ="";
+            if(this.state > 0)
+            {
+                // ...AND is an operator
+                if (((tmp == '%') || (tmp == 'x') || (tmp == '+') || (tmp == '-'))) {
+                    // Operator is valid: switch from entry of token 1 to token 2
+                    this.setOperator(tmp);
+                    Log.d("Operator set", String.valueOf(tmp));
+                    this.setState(2);
+                    Log.d("State", String.valueOf(getState()));
+                    this.ctok = "";
+                }
             }
         }
     }

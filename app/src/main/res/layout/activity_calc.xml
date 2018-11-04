@@ -235,6 +235,50 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/btn_recall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:includeFontPadding="false"
+                    android:padding="0dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:soundEffectsEnabled="true"
+                    android:text="RCL"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:theme="?android:attr/buttonStyle" />
+
+                <Button
+                    android:id="@+id/btn_store"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:includeFontPadding="false"
+                    android:padding="0dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:soundEffectsEnabled="true"
+                    android:text="STO"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:theme="?android:attr/buttonStyle" />
+
+                <Button
                     android:id="@+id/btn_corr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -257,8 +301,38 @@
                     android:theme="?android:attr/buttonStyle" />
 
                 <Button
-                    android:id="@+id/btn_equal"
+                    android:id="@+id/btn_squareRoot"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:includeFontPadding="false"
+                    android:padding="0dp"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:soundEffectsEnabled="true"
+                    android:text="sqrt()"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp"
+                    android:theme="?android:attr/buttonStyle" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/ktr6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/btn_equal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="0dp"
                     android:layout_marginLeft="0dp"
