@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.os.SystemClock;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -116,28 +117,28 @@ public class calc extends AppCompatActivity {
                         display.setText("+");
                         myTokenizer.setCurrentToken("+");
                         myTokenizer.mytokenize();
-                        display.setText("");
+                        // display.setText("");
                     }
 
                     if(ch.toString().equals("-") ) {
                         display.setText("-");
                         myTokenizer.setCurrentToken("-");
                         myTokenizer.mytokenize();
-                        display.setText("");
+                        // display.setText("");
                     }
 
                     if(ch.equals("x") ) {
                         display.setText("x");
                         myTokenizer.setCurrentToken("x");
                         myTokenizer.mytokenize();
-                        display.setText("");
+                        // display.setText("");
                     }
 
                     if(ch.equals("%") ) {
                         display.setText("%");
                         myTokenizer.setCurrentToken("%");
                         myTokenizer.mytokenize();
-                        display.setText("");
+                        // display.setText("");
                     }
 
                     if(ch.equals("sqrt()") ) {
@@ -154,7 +155,8 @@ public class calc extends AppCompatActivity {
                             else
                             {
                                 myTR.setErrorflag(true);
-                                display.setText("complexe numbers aren't supported");
+                                display.setText("Error: complex number");
+                                //display.setText(Double.toString((myTokenizer.getToken1())));
                                 return;
                             }
                         }
@@ -168,7 +170,7 @@ public class calc extends AppCompatActivity {
                             else
                             {
                                 myTR.setErrorflag(true);
-                                display.setText("complexe numbers aren't supported");
+                                display.setText("Error: complex number");
                                 return;
                             }
                         }
@@ -235,10 +237,27 @@ public class calc extends AppCompatActivity {
                     Button btn = (Button) v;
                     String ch = btn.getText().toString();
                     String current_display_text = display.getText().toString();
+
+                    // case: the last thing seen was an Operator
+                    // (and now we see a digit again)
+                    // the case covers a given operand1, operator and still-to-enter
+                    // operand2 (delete display and continue to enter numbers)
+                    // if (myTokenizer.getState()==2 || myTokenizer.getState()==3) {
+                    if (myTokenizer.getState()==2) {
+                        current_display_text="";
+                        display.setText("");
+                    }
+
                     // case: 0 is displayed (nothing entered yet; replace zero with
                     // current character/number entered on keyboard.
                     if (display.getText().toString().equals("0")) {
+                        if(ch.equals(".")){
+                            current_display_text="0";
+                            current_display_text.concat(ch);
+                            display.setText(current_display_text);
+                        }
                         display.setText(ch);
+                        current_display_text.concat(ch);
                         myTokenizer.setCurrentToken(display.getText().toString());
                         myTokenizer.mytokenize();
 
