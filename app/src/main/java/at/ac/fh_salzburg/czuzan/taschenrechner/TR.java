@@ -10,7 +10,7 @@ public class TR {
     private char operator;
     private double result;
     private boolean errorflag;
-    public double digits = 8; // Numbers to display after comma
+    public double digits = 16; // Numbers to display after comma
     private String lastUsedButton;
     private double storedValue;
 

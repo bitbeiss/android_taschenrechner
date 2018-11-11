@@ -16,6 +16,17 @@
         app:layout_constrainedWidth="false">
 
         <TextView
+            android:id="@+id/txtHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:gravity="right"
+            android:paddingRight="30dp"
+            android:paddingBottom="2dp"
+            android:textSize="18sp"
+            tools:textColor="@color/myGray" />
+
+        <TextView
             android:id="@+id/display"
             android:layout_width="345dp"
             android:layout_height="wrap_content"

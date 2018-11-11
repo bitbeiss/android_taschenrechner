@@ -39,6 +39,7 @@ public class Tokenizer {
         this.setState(0);
         this.setCurrentToken("");
         Log.d("Reset","Tokenizer was reset.");
+
     }
 
     public void trcontinue(){
@@ -180,8 +181,8 @@ public class Tokenizer {
         // See if the current token evaluates to a char type
         if (tryParseChar(this.ctok)) {
             char tmp = ctok.charAt(0);
-            if(this.state > 0)
-            {
+            //if(this.state > 0)
+            //{
                 // ...AND is an operator
                 if (((tmp == '%') || (tmp == 'x') || (tmp == '+') || (tmp == '-'))) {
                     // Operator is valid: switch from entry of token 1 to token 2
@@ -191,7 +192,7 @@ public class Tokenizer {
                     Log.d("State", String.valueOf(getState()));
                     this.ctok = "";
                 }
-            }
+           // }
         }
     }
 }
