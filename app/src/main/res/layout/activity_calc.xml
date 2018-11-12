@@ -232,7 +232,7 @@
                     android:id="@+id/btn_division"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="%"
+                    android:text="/"
                     android:textColor="@android:color/holo_blue_dark"
                     android:textSize="24sp"
                     android:theme="?android:attr/buttonBarButtonStyle" />
@@ -328,7 +328,7 @@
                     android:paddingRight="0dp"
                     android:paddingBottom="0dp"
                     android:soundEffectsEnabled="true"
-                    android:text="sqrt()"
+                    android:text="\u221a¯¯"
                     android:textColor="@android:color/black"
                     android:textSize="24sp"
                     android:theme="?android:attr/buttonStyle" />
